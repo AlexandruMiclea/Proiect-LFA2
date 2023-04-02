@@ -11,6 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>Proiect-LFA2</Name>
     <RootNamespace>Proiect-LFA2</RootNamespace>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

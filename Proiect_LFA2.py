@@ -31,6 +31,7 @@ class Automat:
         with open(fisier, "r", encoding="utf-8") as fisierautomat:
             self.stari = [x for x in fisierautomat.readline().split()]
             self.passed = [0 for x in range(len(self.stari))] 
+            print(self.stari[0])
             self.stari[0] = self.stari[0][-2:] #debug ca am mizerie unicode la inceput de fisier
             #print(self.stari)
 
@@ -96,10 +97,44 @@ class Automat:
         #print(ans)
         return ans
 
-    def toNFA():
+    def toNFA(self):
 
-          #todo implement
-          #ideea e ca pentru fiecare nod unde am lambda apoi litera, sterg lambda si bag litera
+        for i in self.matriceTranzitii:
+            for j in i:
+                print(j, end=' ')
+            print()
+        print()
+
+        cMatrice = copy.deepcopy(self.matriceTranzitii)
+        bIsOk = True
+
+        for i in range(len(cMatrice)):
+            for j in range(len(cMatrice[i])):
+                if 'λ' in cMatrice[i][j]:
+                    if i == j: 
+                        self.matriceTranzitii[i][j].remove('λ')
+                        continue
+                    bIsOk = False
+                    self.matriceTranzitii[i][j].remove('λ')
+                    # q1 lb q2 l q3 -> 
+                    for k in range(len(cMatrice[j])):
+                        for l in cMatrice[k][i]:
+                            if l not in self.matriceTranzitii[k][j]:
+                                self.matriceTranzitii[k][j].append(l)
+                    for k in range(len(cMatrice[j])):
+                        for l in cMatrice[j][k]:
+                            if l not in self.matriceTranzitii[i][k]:
+                                self.matriceTranzitii[i][k].append(l)
+                    
+                    
+        if not bIsOk: self.toNFA()
+        
+
+
+
+        #todo implement
+        #ideea e ca pentru fiecare nod unde am lambda apoi litera, sterg lambda si bag litera
+        return
 
         
     #afisam datele dupa citire
@@ -127,6 +162,7 @@ if __name__ == "__main__":
     x.lambdaClosure()
     #x.printData()
     x.toNFA()
+    x.printData()
     #print(x.passed)
     #x.printData()
 
