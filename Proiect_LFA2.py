@@ -31,8 +31,8 @@ class Automat:
         with open(fisier, "r", encoding="utf-8") as fisierautomat:
             self.stari = [x for x in fisierautomat.readline().split()]
             self.passed = [0 for x in range(len(self.stari))] 
-            print(self.stari[0])
-            self.stari[0] = self.stari[0][-2:] #debug ca am mizerie unicode la inceput de fisier
+            #print(self.stari[0]) #todo debug
+            self.stari[0] = self.stari[0][1:] #debug ca am mizerie unicode la inceput de fisier
             #print(self.stari)
 
             #initializam matricea de tranzitii
@@ -99,11 +99,11 @@ class Automat:
 
     def toNFA(self):
 
-        for i in self.matriceTranzitii:
-            for j in i:
-                print(j, end=' ')
-            print()
-        print()
+        #for i in self.matriceTranzitii:
+        #    for j in i:
+        #        print(j, end=' ')
+        #    print()
+        #print()
 
         cMatrice = copy.deepcopy(self.matriceTranzitii)
         bIsOk = True
@@ -126,15 +126,57 @@ class Automat:
                             if l not in self.matriceTranzitii[i][k]:
                                 self.matriceTranzitii[i][k].append(l)
                     
-                    
         if not bIsOk: self.toNFA()
         
-
-
-
-        #todo implement
-        #ideea e ca pentru fiecare nod unde am lambda apoi litera, sterg lambda si bag litera
         return
+
+    def toDFA(self):
+        
+        for k in self.alfabet:
+            stareNoua = list()
+            for j in range(len(self.matriceTranzitii.index(self.stareInit))):
+                if k in self.matriceTranzitii[i][j]:
+                    stareNoua.append(self.stari[j])
+            #print(stareNoua)
+            if(stareNoua not in self.stari and len(stareNoua) > 1):
+                self.stari.append(stareNoua)
+
+        nMatriceTranzitii = [[list() for x in range(len(self.stari))] for i in range(len(self.stari))] 
+        #for i in nMatriceTranzitii:
+        #    for j in i:
+        #        print(j, end=' ')
+        #    print()
+        #print(self.stari)
+
+        
+
+        for i in range(len(nMatriceTranzitii)):
+            for k in self.alfabet:
+                if i < len(self.matriceTranzitii):
+                    stareNoua = list()
+                    for j in range(len(self.matriceTranzitii[i])):
+                        if k in self.matriceTranzitii[i][j]:
+                            stareNoua.append(self.stari[j])
+                    #print(stareNoua)
+                    if len(stareNoua) == 1:
+                        stareNoua = stareNoua[0]
+                    if (stareNoua != list()):
+                        nMatriceTranzitii[i][self.stari.index(stareNoua)].append(k)
+                else:
+                    stareNoua = list()
+                    for el in self.stari[i]:
+                        for j in range(len(self.matriceTranzitii[self.stari.index(el)])):
+                            if k in self.matriceTranzitii[self.stari.index(el)][j] and self.stari[j] not in stareNoua:
+                                stareNoua.append(self.stari[j])
+                    if len(stareNoua) == 1:
+                        stareNoua = stareNoua[0]
+                    print(stareNoua)
+                    if (stareNoua != list()):
+                        nMatriceTranzitii[i][self.stari.index(stareNoua)].append(k)
+
+        self.matriceTranzitii = copy.deepcopy(nMatriceTranzitii)
+
+        return 
 
         
     #afisam datele dupa citire
@@ -144,15 +186,15 @@ class Automat:
         print(self.alfabet)
         print(self.stareInit)
         print(self.stariFinale)
-        print(self.NFA)
-        print(self.lambdaStari)
+        #print(self.NFA)
+        #print(self.lambdaStari)
 
         for i in self.matriceTranzitii:
             for j in i:
                 print(j, end=' ')
             print()
 
-        print(self.lambdaInchidere)
+        #print(self.lambdaInchidere)
 
             
 if __name__ == "__main__":
@@ -162,6 +204,8 @@ if __name__ == "__main__":
     x.lambdaClosure()
     #x.printData()
     x.toNFA()
+    x.printData()
+    x.toDFA()
     x.printData()
     #print(x.passed)
     #x.printData()
