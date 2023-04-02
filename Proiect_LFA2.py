@@ -81,6 +81,11 @@ class Automat:
                 if 'λ' not in self.matriceTranzitii[i][self.stari.index(elem)]:
                     self.matriceTranzitii[i][self.stari.index(elem)].append('λ')
 
+        for i in range(len(self.stari)):
+            self.lambdaInchidere[i].append(self.stari[i])
+        #stariNoi = copy.deepcopy([self.lambdaInchidere[i].append(self.stari[i]) for i in range(len(self.stari))])
+        print(self.lambdaInchidere)
+
     def DFS(self, nodStart, nodCurent):
         if self.passed[self.stari.index(nodCurent)]: return #evitam cicluri infinite
         self.passed[self.stari.index(nodStart)] = 1
@@ -104,7 +109,7 @@ class Automat:
         #        print(j, end=' ')
         #    print()
         #print()
-
+        
         cMatrice = copy.deepcopy(self.matriceTranzitii)
         bIsOk = True
 
@@ -128,9 +133,12 @@ class Automat:
                     
         if not bIsOk: self.toNFA()
         
+        
+
         return
 
     def toDFA(self):
+        
         
         stariNoi = [self.stareInit]
         for i in range(len(self.stari)):
@@ -201,7 +209,7 @@ class Automat:
         print(self.stareInit)
         print(self.stariFinale)
         #print(self.NFA)
-        #print(self.lambdaStari)
+        #print(self.lambdaInchidere)
 
         for i in self.matriceTranzitii:
             for j in i:
@@ -216,7 +224,7 @@ if __name__ == "__main__":
     x.readAutomat("automat.txt")
     #x.printData()
     x.lambdaClosure()
-    #x.printData()
+    x.printData()
     x.toNFA()
     x.printData()
     x.toDFA()

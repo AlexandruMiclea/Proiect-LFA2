@@ -1,14 +1,7 @@
-﻿q0 q1 q2 q3 q4
-012
-q1 1 q0
-q0 1 q1
+﻿q0 q1 q2 q3
+0
+q0 λ q1
 q0 λ q2
-q2 λ q0
-q3 0 q2
-q2 0 q3
-q0 2 q4
-q4 2 q0
-q2 2 q4
-q4 2 q2
+q2 λ q3
 q0
-q0 q2
+q3
