@@ -132,48 +132,62 @@ class Automat:
 
     def toDFA(self):
         
-        for k in self.alfabet:
-            stareNoua = list()
-            for j in range(len(self.matriceTranzitii.index(self.stareInit))):
-                if k in self.matriceTranzitii[i][j]:
-                    stareNoua.append(self.stari[j])
-            #print(stareNoua)
-            if(stareNoua not in self.stari and len(stareNoua) > 1):
-                self.stari.append(stareNoua)
+        stariNoi = [self.stareInit]
+        for i in range(len(self.stari)):
+            for k in self.alfabet:
+                stareNoua = list()
+                for j in range(len(self.matriceTranzitii[i])):
+                    if k in self.matriceTranzitii[i][j]:
+                        stareNoua.append(self.stari[j])
+                #print(stareNoua)
+                if(stareNoua not in stariNoi and len(stareNoua) > 1):
+                    stariNoi.append(stareNoua)
+                if(len(stareNoua) == 1):
+                    if (stareNoua[0] not in stariNoi):
+                        stariNoi.append(stareNoua[0])
 
-        nMatriceTranzitii = [[list() for x in range(len(self.stari))] for i in range(len(self.stari))] 
+        nMatriceTranzitii = [[list() for x in range(len(stariNoi))] for i in range(len(stariNoi))] 
+        nStariFinale = list()
+
+        #self.stari = copy.deepcopy(stariNoi)
         #for i in nMatriceTranzitii:
         #    for j in i:
         #        print(j, end=' ')
         #    print()
         #print(self.stari)
+        for el in stariNoi:
+            for ell in self.stariFinale:
+                if ell in el and ell not in nStariFinale:
+                    nStariFinale.append(el)
+        self.stariFinale = copy.deepcopy(nStariFinale)
 
         
 
-        for i in range(len(nMatriceTranzitii)):
+        for i in range(len(stariNoi)):
             for k in self.alfabet:
-                if i < len(self.matriceTranzitii):
+                if type(stariNoi[i]) == type("1"):
+                    #print(self.stari[i])
                     stareNoua = list()
-                    for j in range(len(self.matriceTranzitii[i])):
-                        if k in self.matriceTranzitii[i][j]:
+                    for j in range(len(self.stari)):
+                        if k in self.matriceTranzitii[self.stari.index(stariNoi[i])][j]:
                             stareNoua.append(self.stari[j])
                     #print(stareNoua)
                     if len(stareNoua) == 1:
                         stareNoua = stareNoua[0]
                     if (stareNoua != list()):
-                        nMatriceTranzitii[i][self.stari.index(stareNoua)].append(k)
+                        nMatriceTranzitii[i][stariNoi.index(stareNoua)].append(k)
                 else:
                     stareNoua = list()
-                    for el in self.stari[i]:
+                    for el in stariNoi[i]:
                         for j in range(len(self.matriceTranzitii[self.stari.index(el)])):
                             if k in self.matriceTranzitii[self.stari.index(el)][j] and self.stari[j] not in stareNoua:
                                 stareNoua.append(self.stari[j])
                     if len(stareNoua) == 1:
                         stareNoua = stareNoua[0]
-                    print(stareNoua)
+                    #print(stareNoua)
                     if (stareNoua != list()):
-                        nMatriceTranzitii[i][self.stari.index(stareNoua)].append(k)
-
+                        nMatriceTranzitii[i][stariNoi.index(stareNoua)].append(k)
+        self.stari = copy.deepcopy(stariNoi)
         self.matriceTranzitii = copy.deepcopy(nMatriceTranzitii)
 
         return 
@@ -209,4 +223,3 @@ if __name__ == "__main__":
     x.printData()
     #print(x.passed)
     #x.printData()
-
