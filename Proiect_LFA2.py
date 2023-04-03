@@ -144,7 +144,8 @@ class Automat:
         # pornesc cu lambda inchiderea nodului in!!!!
         lStari = [list(sorted(self.lambdaInchidere[self.stari.index(self.stareInit)]))]
         #print(lStari)
-        nMatrice = [[list() for x in range(len(self.alfabet))]] 
+        nMatrice = [[list() for x in range(len(self.alfabet))] for i in range(1, 100)] 
+        #self.matriceTranzitii = [[list() for x in range(len(self.stari))] for i in range(len(self.stari))] #ce fac cu asta??
         #print(nMatrice)
         
         oldLen = 0
@@ -153,49 +154,59 @@ class Automat:
 
         while newLen != oldLen or idx < len(lStari):
             lNewStari = []
-            stareNoua = []
 
             for k in self.alfabet:
                 for sst in lStari[idx]:
+                    #print(sst)
                     stareNoua = []
                     il = self.stari.index(sst)
+                    #print(il)
                     for ic in range(len(self.stari)):
-                        if k in self.matriceTranzitii[il][ic] and k not in stareNoua:
+                        #print(self.matriceTranzitii[il][ic])
+                        if k in self.matriceTranzitii[il][ic]:
                             stareNoua.append(self.stari[ic])
-                #print(stareNoua)
-                if len(stareNoua) > 1:
-                    stareNoua = stareNoua.sort()
-                print(stareNoua)
-                nMatrice[idx][self.alfabet.index(k)].append(stareNoua)
-                if stareNoua not in lStari and stareNoua != [] and stareNoua != 'Null':
-                    lNewStari.append(stareNoua)
-            print(lNewStari)
+                    #print(stareNoua)
+                    if len(stareNoua) > 1:
+                        stareNoua.sort()
+                    #print(stareNoua)
+                    nMatrice[idx][self.alfabet.index(k)] = stareNoua
+                    if stareNoua not in lStari and stareNoua not in lNewStari and stareNoua != []:
+                        print("Stare noua! ")
+                        print(stareNoua)
+                        lNewStari.append(stareNoua)
+                #print(lNewStari)
 
 
-            for i in nMatrice:
-                for j in i:
-                    print(j, end=' ')
-            print()
-
+            #for i in nMatrice:
+            #    for j in i:
+            #        print(j, end=' ')
+            #print()
+            
             for el in lNewStari:
-
                 lStari.append(el)
             print(lStari)
 
-            nMatrice.append([list(list()) for x in range(len(self.alfabet))] * len(lNewStari))
+            #nMatrice.append([list(list()) for x in range(len(self.alfabet))] * len(lNewStari))
 
-
-            for i in nMatrice:
-                for j in i:
-                    print(j, end=' ')
-            print()
+            
             
             
             oldLen = newLen
-            newLen += len(lNewStari)
+            newLen = len(lStari)
             idx += 1
 
-            
+        
+        for i in range(len(lStari)):
+            for j in range(len(self.alfabet)):
+                print(nMatrice[i][j], end=' ')
+            print()
+
+    def writeAutomat(self, output):
+
+
+        #final modifications
+        
+
         #    for k in self.alfabet:
         #        stareNoua = list()
         #        for l in range(len(lStari[i])):
@@ -289,5 +300,4 @@ if __name__ == "__main__":
     #x.printData()
     x.toDFA()
     #x.printData()
-    #print(x.passed)
-    #x.printData()
+    x.writeAutomat("out.txt")
