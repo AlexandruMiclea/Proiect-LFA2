@@ -25,6 +25,8 @@ class Automat:
         self.lambdaStari = list()
         self.passed = list()
         self.lambdaInchidere = list()
+        self.sDFA = list()
+        self.cStari = list()
         
 
     def readAutomat(self, fisier):
@@ -85,7 +87,7 @@ class Automat:
         for i in range(len(self.stari)):
             self.lambdaInchidere[i].append(self.stari[i])
         #stariNoi = copy.deepcopy([self.lambdaInchidere[i].append(self.stari[i]) for i in range(len(self.stari))])
-        print(self.lambdaInchidere)
+        #print(self.lambdaInchidere)
 
     def DFS(self, nodStart, nodCurent):
         if self.passed[self.stari.index(nodCurent)]: return #evitam cicluri infinite
@@ -152,28 +154,36 @@ class Automat:
         newLen = len(lStari)
         idx = 0
 
+        #for i in self.matriceTranzitii:
+        #    for j in i:
+        #        print(j, end=' ')
+        #    print()
+        #print()
+
         while newLen != oldLen or idx < len(lStari):
             lNewStari = []
 
             for k in self.alfabet:
+                #print(lStari[idx])
+                stareNoua = []
                 for sst in lStari[idx]:
-                    #print(sst)
-                    stareNoua = []
                     il = self.stari.index(sst)
                     #print(il)
                     for ic in range(len(self.stari)):
                         #print(self.matriceTranzitii[il][ic])
-                        if k in self.matriceTranzitii[il][ic]:
+                        if k in self.matriceTranzitii[il][ic] and self.stari[ic] not in stareNoua:
+                            #print(sst)
                             stareNoua.append(self.stari[ic])
                     #print(stareNoua)
-                    if len(stareNoua) > 1:
-                        stareNoua.sort()
+                #print(stareNoua)
+                if len(stareNoua) > 1:
+                    stareNoua.sort()
+                #print(stareNoua)
+                nMatrice[idx][self.alfabet.index(k)] = stareNoua
+                if stareNoua not in lStari and stareNoua not in lNewStari and stareNoua != []:
+                    #print("Stare noua! ")
                     #print(stareNoua)
-                    nMatrice[idx][self.alfabet.index(k)] = stareNoua
-                    if stareNoua not in lStari and stareNoua not in lNewStari and stareNoua != []:
-                        print("Stare noua! ")
-                        print(stareNoua)
-                        lNewStari.append(stareNoua)
+                    lNewStari.append(stareNoua)
                 #print(lNewStari)
 
 
@@ -184,7 +194,7 @@ class Automat:
             
             for el in lNewStari:
                 lStari.append(el)
-            print(lStari)
+            #print(lStari)
 
             #nMatrice.append([list(list()) for x in range(len(self.alfabet))] * len(lNewStari))
 
@@ -195,14 +205,62 @@ class Automat:
             newLen = len(lStari)
             idx += 1
 
+        #print(lStari)
+        self.cStari = copy.deepcopy(lStari)
+        self.stari = ["".join(elem) for elem in lStari]
         
-        for i in range(len(lStari)):
+        self.sDFA = copy.deepcopy(lStari)
+        self.matriceTranzitii = copy.deepcopy(nMatrice)
+        #print(self.stari)
+        #self.stari.sort()
+
+        #for i in range(len(lStari)):
+        #    print(lStari[i])
+        #    for j in range(len(self.alfabet)):
+        #        print(nMatrice[i][j], end=' ')
+        #    print()
+
+    def writeAutomat(self, fisier = ""):
+
+        #print("DEBUG")
+        #print(self.cStari)
+        #print("DEBUG")
+
+        print(*self.stari)
+        print("".join(self.alfabet))
+
+        for i in range(len(self.stari)):
             for j in range(len(self.alfabet)):
-                print(nMatrice[i][j], end=' ')
-            print()
+                if self.matriceTranzitii[i][j] != []:
+                    print("".join(self.stari[i]), end=" ")
+                    print(self.alfabet[j], end = " ")
+                    print("".join(self.matriceTranzitii[i][j]))
+            #print()
+            
+                
+        print(self.stari[0])
+        aux = []
+        for elem in self.stariFinale:
+            for item in self.cStari:
+                if elem in item and item not in aux:
+                    aux.append(item)
+                    #print(item, end=" ")
+        print(*["".join(el) for el in aux])
+        aux = ["".join(el) for el in aux]
 
-    def writeAutomat(self, output):
+        if fisier != "":
+            with open(fisier, "w") as output:
+                output.write(" ".join(self.stari) + "\n")
+                output.write("".join(self.alfabet) + "\n")
 
+                for i in range(len(self.stari)):
+                    for j in range(len(self.alfabet)):
+                        if self.matriceTranzitii[i][j] != []:
+                            output.write("".join(self.stari[i]) + " ")
+                            output.write(self.alfabet[j] + " ")
+                            output.write("".join(self.matriceTranzitii[i][j]) + '\n')
+                output.write(self.stari[0] + "\n")
+                output.write(" ".join(aux))
 
         #final modifications
         
@@ -300,4 +358,4 @@ if __name__ == "__main__":
     #x.printData()
     x.toDFA()
     #x.printData()
-    x.writeAutomat("out.txt")
+    x.writeAutomat("DFA.txt")

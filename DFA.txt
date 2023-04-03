@@ -1,0 +1,6 @@
+q0q3 q2q5 q1q4
+12
+q0q3 1 q2q5
+q0q3 2 q1q4
+q0q3
+q2q5
