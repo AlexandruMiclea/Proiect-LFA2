@@ -109,7 +109,7 @@ class Automat:
         #        print(j, end=' ')
         #    print()
         #print()
-        
+
         cMatrice = copy.deepcopy(self.matriceTranzitii)
         bIsOk = True
 
@@ -124,11 +124,12 @@ class Automat:
                     # q1 lb q2 l q3 -> 
                     for k in range(len(cMatrice[j])):
                         for l in cMatrice[k][i]:
-                            if l not in self.matriceTranzitii[k][j]:
+                            # am adaugat conditia de is not lambda
+                            if l not in self.matriceTranzitii[k][j] and l != 'λ':
                                 self.matriceTranzitii[k][j].append(l)
                     for k in range(len(cMatrice[j])):
                         for l in cMatrice[j][k]:
-                            if l not in self.matriceTranzitii[i][k]:
+                            if l not in self.matriceTranzitii[i][k] and l != 'λ':
                                 self.matriceTranzitii[i][k].append(l)
                     
         if not bIsOk: self.toNFA()
@@ -139,6 +140,11 @@ class Automat:
 
     def toDFA(self):
         
+        # pornesc cu lambda inchiderea nodului in!!!!
+        lStari = [list(self.lambdaInchidere[self.stari.index(self.stareInit)])]
+        print(lStari)
+        nMatrice = [[list() for x in range(len(self.alfabet))]] 
+        print(nMatrice)
         
         stariNoi = [self.stareInit]
         for i in range(len(self.stari)):
@@ -228,6 +234,6 @@ if __name__ == "__main__":
     x.toNFA()
     x.printData()
     x.toDFA()
-    x.printData()
+    #x.printData()
     #print(x.passed)
     #x.printData()

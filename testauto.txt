@@ -55,3 +55,29 @@ q1 c q0
 q1 b q2
 q0
 q2
+
+A B C D E F
+12
+A 2 B
+A 1 C
+A λ D
+D 2 E
+D 1 F
+A
+F
+
+q0 q1 q2 q3 q4 q5
+012
+q5 1 q0
+q0 1 q5
+q0 λ q2
+q2 λ q1
+q1 λ q0
+q3 0 q2
+q2 0 q3
+q0 2 q4
+q4 2 q0
+q2 2 q4
+q4 2 q2
+q0
+q0 q2
